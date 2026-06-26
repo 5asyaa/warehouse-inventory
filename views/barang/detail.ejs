@@ -1,15 +1,87 @@
-<%- layout('user') %>
-
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Detail Barang</h2>
-    <a href="/barang" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Kembali
-    </a>
+    <div>
+        <a href="/barang/<%= barang.id %>/edit" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a href="/barang" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali
+        </a>
+    </div>
 </div>
 
-<!-- TODO: Implement barang detail view -->
-<div class="card shadow">
-    <div class="card-body">
-        <p class="text-muted">Detail barang akan ditampilkan di sini.</p>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <img src="<%= barang.foto %>" alt="<%= barang.nama_barang %>" 
+                     class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th style="width: 30%;">Kode Barang</th>
+                            <td><%= barang.kode_barang %></td>
+                        </tr>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <td><%= barang.nama_barang %></td>
+                        </tr>
+                        <tr>
+                            <th>Deskripsi</th>
+                            <td><%= barang.deskripsi || '-' %></td>
+                        </tr>
+                        <tr>
+                            <th>Kategori</th>
+                            <td><%= barang.nama_kategori || '-' %></td>
+                        </tr>
+                        <tr>
+                            <th>Lokasi</th>
+                            <td><%= barang.nama_lokasi || '-' %></td>
+                        </tr>
+                        <tr>
+                            <th>Stok</th>
+                            <td>
+                                <%= barang.stok %>
+                                <% if (barang.stok <= barang.stok_minimum) { %>
+                                    <span class="badge bg-warning text-dark ms-2">Hampir Habis</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Stok Minimum</th>
+                            <td><%= barang.stok_minimum %></td>
+                        </tr>
+                        <tr>
+                            <th>Kondisi</th>
+                            <td><%= barang.kondisi %></td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                <% if (barang.status === 'Aktif') { %>
+                                    <span class="badge bg-success">Aktif</span>
+                                <% } else { %>
+                                    <span class="badge bg-danger">Nonaktif</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tanggal Dibuat</th>
+                            <td><%= new Date(barang.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                        </tr>
+                        <tr>
+                            <th>Tanggal Diupdate</th>
+                            <td><%= new Date(barang.updated_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,14 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const barangController = require('../controllers/barangController');
+const authMiddleware = require('../middleware/auth');
+const adminMiddleware = require('../middleware/admin');
 
-// TODO: Implement barang routes
-// router.get('/', barangController.index);
-// router.get('/create', barangController.create);
-// router.post('/', barangController.store);
-// router.get('/edit/:id', barangController.edit);
-// router.put('/:id', barangController.update);
-// router.delete('/:id', barangController.delete);
-// router.get('/:id', barangController.detail);
+// Apply auth and admin middleware to all routes
+router.use(authMiddleware);
+router.use(adminMiddleware);
+
+// Index - List all barang
+router.get('/', barangController.index);
+
+// Create - Show create form
+router.get('/create', barangController.create);
+
+// Store - Save new barang
+router.post('/', barangController.store);
+
+// Detail - Show barang detail
+router.get('/:id', barangController.detail);
+
+// Edit - Show edit form
+router.get('/:id/edit', barangController.edit);
+
+// Update - Update barang
+router.post('/:id/update', barangController.update);
+
+// Delete - Soft delete barang
+router.post('/:id/delete', barangController.destroy);
 
 module.exports = router;
