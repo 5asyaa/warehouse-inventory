@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <%- include('../partials/navbar') %>
+    
+    <div class="d-flex">
+        <%- include('../partials/sidebar') %>
+        
+        <main class="main-content flex-grow-1">
+            <div class="container-fluid py-4">
+                <%- body %>
+            </div>
+        </main>
+    </div>
+    
+    <%- include('../partials/footer') %>
+    <%- include('../partials/scripts') %>
+</body>
+</html>
