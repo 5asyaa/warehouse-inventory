@@ -26,6 +26,9 @@ router.get('/:id/edit', barangController.edit);
 // Update - Update barang
 router.post('/:id/update', barangController.update);
 
+// Activate - Reactivate barang
+router.post('/:id/activate', barangController.activate);
+
 // Delete - Soft delete barang
 router.post('/:id/delete', barangController.destroy);
 

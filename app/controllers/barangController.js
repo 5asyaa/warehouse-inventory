@@ -524,6 +524,27 @@ const barangController = {
                 message: 'Terjadi kesalahan. Silakan coba lagi.'
             });
         }
+    },
+
+    // Activate - Reactivate barang (change status to Aktif)
+    activate: async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            // Activate by changing status to Aktif
+            await Barang.activate(id);
+
+            res.json({
+                success: true,
+                message: 'Barang berhasil diaktifkan kembali.'
+            });
+        } catch (error) {
+            console.error('Error activating barang:', error);
+            res.json({
+                success: false,
+                message: 'Terjadi kesalahan. Silakan coba lagi.'
+            });
+        }
     }
 };
 

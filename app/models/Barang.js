@@ -48,6 +48,11 @@ class Barang {
         return result.affectedRows;
     }
 
+    static async activate(id) {
+        const [result] = await pool.query('UPDATE barang SET status = ? WHERE id = ?', ['Aktif', id]);
+        return result.affectedRows;
+    }
+
     static async generateKodeBarang() {
         const [rows] = await pool.query('SELECT MAX(id) as max_id FROM barang');
         const maxId = rows[0].max_id || 0;

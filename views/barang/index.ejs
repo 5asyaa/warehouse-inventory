@@ -62,9 +62,15 @@
                                 <a href="/barang/<%= item.id %>/edit" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button onclick="deleteBarang(<%= item.id %>, '<%= item.nama_barang %>')" class="btn btn-sm btn-danger" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <% if (item.status === 'Aktif') { %>
+                                    <button onclick="deactivateBarang(<%= item.id %>, '<%= item.nama_barang %>')" class="btn btn-sm btn-secondary" title="Nonaktifkan">
+                                        <i class="bi bi-dash-circle"></i>
+                                    </button>
+                                <% } else { %>
+                                    <button onclick="activateBarang(<%= item.id %>, '<%= item.nama_barang %>')" class="btn btn-sm btn-success" title="Aktifkan">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                <% } %>
                             </td>
                         </tr>
                     <% }) %>
@@ -84,19 +90,66 @@ $(document).ready(function() {
     });
 });
 
-function deleteBarang(id, nama) {
+function deactivateBarang(id, nama) {
     Swal.fire({
-        title: 'Nonaktifkan Barang',
-        text: `Apakah Anda yakin ingin menonaktifkan barang "${nama}"?`,
+        title: '⚠ Nonaktifkan Barang',
+        text: `Barang tidak akan tersedia untuk transaksi, namun data tetap tersimpan.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Nonaktifkan',
-        cancelButtonText: 'Batal'
+        confirmButtonColor: '#f59e0b',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Nonaktifkan',
+        cancelButtonText: 'Batalkan'
     }).then((result) => {
         if (result.isConfirmed) {
             fetch(`/barang/${id}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.message,
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Terjadi kesalahan. Silakan coba lagi.',
+                    icon: 'error'
+                });
+            });
+        }
+    });
+}
+
+function activateBarang(id, nama) {
+    Swal.fire({
+        title: '⚠ Aktifkan Barang',
+        text: `Barang akan tersedia kembali untuk transaksi.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f59e0b',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Aktifkan',
+        cancelButtonText: 'Batalkan'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/barang/${id}/activate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
