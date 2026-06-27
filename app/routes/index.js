@@ -15,8 +15,6 @@ router.use('/kategori', require('./kategori'));
 router.use('/lokasi', require('./lokasi'));
 router.use('/barang', require('./barang'));
 router.use('/user', require('./user'));
-
-// Other routes (to be implemented)
-// router.use('/peminjaman', require('./peminjaman'));
+router.use('/peminjaman', require('./peminjaman'));
 
 module.exports = router;

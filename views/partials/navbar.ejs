@@ -7,6 +7,26 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <% if (user.role === 'User') { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= activeMenu === 'peminjaman' ? 'active' : '' %>" href="/peminjaman">
+                            <i class="bi bi-book me-2"></i>Riwayat Peminjaman
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= activeMenu === 'peminjaman' ? 'active' : '' %>" href="/peminjaman/create">
+                            <i class="bi bi-plus-circle me-2"></i>Ajukan Peminjaman
+                        </a>
+                    </li>
+                <% } else if (user.role === 'Admin') { %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= activeMenu === 'peminjaman' ? 'active' : '' %>" href="/peminjaman/manage">
+                            <i class="bi bi-book me-2"></i>Kelola Peminjaman
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">

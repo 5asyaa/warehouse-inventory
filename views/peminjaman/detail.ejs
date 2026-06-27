@@ -1,0 +1,83 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Detail Peminjaman</h2>
+    <a href="/peminjaman" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Kode Peminjaman</th>
+                        <td><%= peminjaman.kode_peminjaman || '#' + peminjaman.id %></td>
+                    </tr>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <td>
+                            <%= peminjaman.nama_barang %>
+                            <br>
+                            <small class="text-muted"><%= peminjaman.kode_barang %></small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Kategori</th>
+                        <td><%= peminjaman.nama_kategori %></td>
+                    </tr>
+                    <tr>
+                        <th>Jumlah</th>
+                        <td><%= peminjaman.jumlah %></td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Pinjam</th>
+                        <td><%= peminjaman.tanggal_pinjam || '-' %></td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Kembali</th>
+                        <td><%= peminjaman.tanggal_jatuh_tempo %></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Keperluan</th>
+                        <td><%= peminjaman.alasan %></td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <% if (peminjaman.status === 'Menunggu') { %>
+                                <span class="badge bg-warning text-dark">Menunggu</span>
+                            <% } else if (peminjaman.status === 'Disetujui') { %>
+                                <span class="badge bg-success">Disetujui</span>
+                            <% } else if (peminjaman.status === 'Ditolak') { %>
+                                <span class="badge bg-danger">Ditolak</span>
+                            <% } else if (peminjaman.status === 'Dipinjam') { %>
+                                <span class="badge bg-primary">Dipinjam</span>
+                            <% } else if (peminjaman.status === 'Dikembalikan') { %>
+                                <span class="badge bg-secondary">Dikembalikan</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% if (peminjaman.alasan_penolakan) { %>
+                    <tr>
+                        <th>Alasan Penolakan</th>
+                        <td><%= peminjaman.alasan_penolakan %></td>
+                    </tr>
+                    <% } %>
+                    <tr>
+                        <th>Tanggal Pengajuan</th>
+                        <td><%= peminjaman.tanggal_pengajuan %></td>
+                    </tr>
+                    <tr>
+                        <th>Dibuat Pada</th>
+                        <td><%= peminjaman.created_at %></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

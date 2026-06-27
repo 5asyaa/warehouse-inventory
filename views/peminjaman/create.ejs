@@ -1,15 +1,87 @@
-<%- layout('user') %>
-
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Ajukan Peminjaman</h2>
-    <a href="/peminjaman/riwayat" class="btn btn-secondary">
+    <a href="/peminjaman" class="btn btn-secondary">
         <i class="bi bi-arrow-left"></i> Kembali
     </a>
 </div>
 
-<!-- TODO: Implement create peminjaman form -->
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+<% } %>
+
 <div class="card shadow">
     <div class="card-body">
-        <p class="text-muted">Form ajukan peminjaman akan ditampilkan di sini.</p>
+        <form action="/peminjaman" method="POST">
+            <div class="mb-3">
+                <label for="barang_id" class="form-label">Barang</label>
+                <select class="form-select" id="barang_id" name="barang_id" required>
+                    <option value="">-- Pilih Barang --</option>
+                    <% barangList.forEach((barang) => { %>
+                        <option value="<%= barang.id %>">
+                            <%= barang.nama_barang %> (<%= barang.kode_barang %>) - Stok: <%= barang.stok %> - <%= barang.nama_kategori %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="jumlah" class="form-label">Jumlah</label>
+                <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" value="<%= jumlah || '' %>" required>
+                <div class="form-text">Minimal 1</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="tanggal_pinjam" class="form-label">Tanggal Pinjam</label>
+                <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" value="<%= tanggal_pinjam || '' %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="tanggal_kembali" class="form-label">Tanggal Kembali</label>
+                <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" value="<%= tanggal_kembali || '' %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="alasan" class="form-label">Keperluan</label>
+                <textarea class="form-control" id="alasan" name="alasan" rows="4" required><%= alasan || '' %></textarea>
+                <div class="form-text">Minimal 10 karakter</div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Ajukan
+                </button>
+                <a href="/peminjaman" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Batal
+                </a>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    // Set minimum date for tanggal_pinjam to today
+    const today = new Date().toISOString().split('T')[0];
+    $('#tanggal_pinjam').attr('min', today);
+
+    // Validate tanggal_kembali >= tanggal_pinjam
+    $('#tanggal_kembali').on('change', function() {
+        const pinjamDate = new Date($('#tanggal_pinjam').val());
+        const kembaliDate = new Date($(this).val());
+        
+        if (kembaliDate < pinjamDate) {
+            alert('Tanggal kembali tidak boleh lebih kecil dari tanggal pinjam');
+            $(this).val('');
+        }
+    });
+
+    // Update max jumlah based on selected barang
+    $('#barang_id').on('change', function() {
+        const selectedOption = $(this).find(':selected');
+        const stok = parseInt(selectedOption.text().match(/Stok: (\d+)/)?.[1] || 0);
+        $('#jumlah').attr('max', stok);
+    });
+});
+</script>

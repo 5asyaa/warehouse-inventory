@@ -1,12 +1,78 @@
-<%- layout('admin') %>
-
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Daftar Peminjaman</h2>
+    <h2>Riwayat Peminjaman</h2>
+    <a href="/peminjaman/create" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Ajukan Peminjaman
+    </a>
 </div>
 
-<!-- TODO: Implement peminjaman table -->
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+<% } %>
+
 <div class="card shadow">
     <div class="card-body">
-        <p class="text-muted">Daftar peminjaman akan ditampilkan di sini.</p>
+        <div class="table-responsive">
+            <table id="peminjamanTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode</th>
+                        <th>Barang</th>
+                        <th>Jumlah</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Kembali</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% peminjaman.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.kode_peminjaman || '#' + item.id %></td>
+                            <td>
+                                <%= item.nama_barang %>
+                                <br>
+                                <small class="text-muted"><%= item.kode_barang %></small>
+                            </td>
+                            <td><%= item.jumlah %></td>
+                            <td><%= item.tanggal_pinjam || '-' %></td>
+                            <td><%= item.tanggal_jatuh_tempo %></td>
+                            <td>
+                                <% if (item.status === 'Menunggu') { %>
+                                    <span class="badge bg-warning text-dark">Menunggu</span>
+                                <% } else if (item.status === 'Disetujui') { %>
+                                    <span class="badge bg-success">Disetujui</span>
+                                <% } else if (item.status === 'Ditolak') { %>
+                                    <span class="badge bg-danger">Ditolak</span>
+                                <% } else if (item.status === 'Dipinjam') { %>
+                                    <span class="badge bg-primary">Dipinjam</span>
+                                <% } else if (item.status === 'Dikembalikan') { %>
+                                    <span class="badge bg-secondary">Dikembalikan</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <a href="/peminjaman/<%= item.id %>" class="btn btn-sm btn-info" title="Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#peminjamanTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
+        },
+        order: [[1, 'desc']]
+    });
+});
+</script>
