@@ -1,67 +1,59 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-5 fade-in">
     <div>
-        <h2>Dashboard Admin</h2>
+        <h2 class="mb-1">Dashboard Admin</h2>
         <p class="text-muted mb-0">Selamat datang, <%= user.namaLengkap %>!</p>
     </div>
 </div>
 
 <div class="row mb-4">
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-box-seam fs-1 text-primary"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Total Barang</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.totalBarang %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon primary">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total Barang</h5>
+                    <p class="stat-value"><%= stats.totalBarang %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-check-circle fs-1 text-success"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Barang Aktif</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.barangAktif %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Aktif</h5>
+                    <p class="stat-value"><%= stats.barangAktif %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-x-circle fs-1 text-danger"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Barang Nonaktif</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.barangNonaktif %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon danger">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Nonaktif</h5>
+                    <p class="stat-value"><%= stats.barangNonaktif %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-people fs-1 text-info"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Total User</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.totalUser %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon info">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total User</h5>
+                    <p class="stat-value"><%= stats.totalUser %></p>
                 </div>
             </div>
         </div>
@@ -70,61 +62,53 @@
 
 <div class="row mb-4">
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-person-check fs-1 text-success"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">User Aktif</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.userAktif %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>User Aktif</h5>
+                    <p class="stat-value"><%= stats.userAktif %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-tags fs-1 text-warning"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Total Kategori</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.totalKategori %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-tags"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total Kategori</h5>
+                    <p class="stat-value"><%= stats.totalKategori %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-geo-alt fs-1 text-secondary"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Total Lokasi</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.totalLokasi %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon secondary">
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total Lokasi</h5>
+                    <p class="stat-value"><%= stats.totalLokasi %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-book fs-1 text-primary"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Total Peminjaman</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.totalPeminjaman %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon primary">
+                    <i class="bi bi-book"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total Peminjaman</h5>
+                    <p class="stat-value"><%= stats.totalPeminjaman %></p>
                 </div>
             </div>
         </div>
@@ -133,46 +117,40 @@
 
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-clock-history fs-1 text-warning"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Pending Approval</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.pendingApproval %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Pending Approval</h5>
+                    <p class="stat-value"><%= stats.pendingApproval %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-box-arrow-right fs-1 text-info"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Barang Dipinjam</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.barangDipinjam %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon info">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Dipinjam</h5>
+                    <p class="stat-value"><%= stats.barangDipinjam %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Barang Terlambat</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.overdue %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Terlambat</h5>
+                    <p class="stat-value"><%= stats.overdue %></p>
                 </div>
             </div>
         </div>
@@ -181,7 +159,7 @@
 
 <div class="row mb-4">
     <div class="col-md-6">
-        <div class="card mb-3">
+        <div class="card mb-3 fade-in">
             <div class="card-header">
                 <h5 class="card-title mb-0">Peminjaman per Bulan</h5>
             </div>
@@ -193,7 +171,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card mb-3">
+        <div class="card mb-3 fade-in">
             <div class="card-header">
                 <h5 class="card-title mb-0">Status Peminjaman</h5>
             </div>
@@ -208,7 +186,7 @@
 
 <div class="row mb-4">
     <div class="col-md-12">
-        <div class="card mb-3">
+        <div class="card mb-3 fade-in">
             <div class="card-header">
                 <h5 class="card-title mb-0">Barang berdasarkan Kategori</h5>
             </div>

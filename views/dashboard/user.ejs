@@ -1,52 +1,46 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-5 fade-in">
     <div>
-        <h2>Dashboard User</h2>
+        <h2 class="mb-1">Dashboard User</h2>
         <p class="text-muted mb-0">Selamat datang, <%= user.namaLengkap %>!</p>
     </div>
 </div>
 
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-box-arrow-right fs-1 text-primary"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Peminjaman Aktif</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.peminjamanAktif %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon primary">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Peminjaman Aktif</h5>
+                    <p class="stat-value"><%= stats.peminjamanAktif %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-clock-history fs-1 text-info"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Riwayat Peminjaman</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.riwayatPeminjaman %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon info">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Riwayat Peminjaman</h5>
+                    <p class="stat-value"><%= stats.riwayatPeminjaman %></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <i class="bi bi-box-seam fs-1 text-success"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title mb-0">Barang Tersedia</h5>
-                        <p class="card-text fs-3 mb-0"><%= stats.barangTersedia %></p>
-                    </div>
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Tersedia</h5>
+                    <p class="stat-value"><%= stats.barangTersedia %></p>
                 </div>
             </div>
         </div>
@@ -55,13 +49,13 @@
 
 <div class="row mb-4">
     <div class="col-md-12">
-        <div class="card mb-3">
+        <div class="card mb-3 fade-in">
             <div class="card-header">
                 <h5 class="card-title mb-0">Peminjaman Terbaru</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Kode</th>
@@ -81,7 +75,7 @@
                                         <td><%= formatDate(item.tanggal_pinjam) %></td>
                                         <td>
                                             <% if (item.status === 'Menunggu') { %>
-                                                <span class="badge bg-warning text-dark">Menunggu</span>
+                                                <span class="badge bg-warning">Menunggu</span>
                                             <% } else if (item.status === 'Disetujui') { %>
                                                 <span class="badge bg-success">Disetujui</span>
                                             <% } else if (item.status === 'Ditolak') { %>
@@ -96,7 +90,7 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="5" class="text-center">Belum ada peminjaman</td>
+                                    <td colspan="5" class="text-center text-muted">Belum ada peminjaman</td>
                                 </tr>
                             <% } %>
                         </tbody>

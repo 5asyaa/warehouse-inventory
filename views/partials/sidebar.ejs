@@ -1,71 +1,71 @@
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h5 class="text-white mb-0">Menu</h5>
+        <h6>Dashboard</h6>
     </div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link <%= activeMenu === 'dashboard' ? 'active' : '' %>" href="/dashboard/admin">
-                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            <a class="nav-link <%= activeMenu === 'dashboard' ? 'active' : '' %>" href="/dashboard/<%= user.role.toLowerCase() %>">
+                <i class="bi bi-speedometer2"></i>Dashboard
             </a>
         </li>
         
-        <li class="nav-item mt-3">
-            <small class="text-white-50 ms-3 text-uppercase fw-bold">Master Data</small>
-        </li>
+        <div class="sidebar-header">
+            <h6>Master Data</h6>
+        </div>
         <li class="nav-item">
             <a class="nav-link <%= activeMenu === 'barang' ? 'active' : '' %>" href="/barang">
-                <i class="bi bi-box me-2"></i>Barang
+                <i class="bi bi-box"></i>Barang
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link <%= activeMenu === 'kategori' ? 'active' : '' %>" href="/kategori">
-                <i class="bi bi-tags me-2"></i>Kategori
+                <i class="bi bi-tags"></i>Kategori
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link <%= activeMenu === 'lokasi' ? 'active' : '' %>" href="/lokasi">
-                <i class="bi bi-geo-alt me-2"></i>Lokasi
+                <i class="bi bi-geo-alt"></i>Lokasi
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link <%= activeMenu === 'user' ? 'active' : '' %>" href="/user">
-                <i class="bi bi-people me-2"></i>User
+                <i class="bi bi-people"></i>User
             </a>
         </li>
         
-        <li class="nav-item mt-3">
-            <small class="text-white-50 ms-3 text-uppercase fw-bold">Transaksi</small>
-        </li>
+        <div class="sidebar-header">
+            <h6>Transaksi</h6>
+        </div>
         <% if (user.role === 'Admin') { %>
             <li class="nav-item">
                 <a class="nav-link <%= activeMenu === 'peminjaman' ? 'active' : '' %>" href="/peminjaman/manage">
-                    <i class="bi bi-book me-2"></i>Kelola Peminjaman
+                    <i class="bi bi-book"></i>Kelola Peminjaman
                 </a>
             </li>
         <% } else { %>
             <li class="nav-item">
                 <a class="nav-link <%= activeMenu === 'peminjaman' ? 'active' : '' %>" href="/peminjaman">
-                    <i class="bi bi-book me-2"></i>Riwayat Peminjaman
+                    <i class="bi bi-book"></i>Riwayat Peminjaman
                 </a>
             </li>
         <% } %>
         
-        <li class="nav-item mt-3">
-            <small class="text-white-50 ms-3 text-uppercase fw-bold">Akun</small>
-        </li>
+        <div class="sidebar-header">
+            <h6>Akun</h6>
+        </div>
         <li class="nav-item">
             <a class="nav-link <%= activeMenu === 'profile' ? 'active' : '' %>" href="/auth/profile">
-                <i class="bi bi-person me-2"></i>Profile
+                <i class="bi bi-person"></i>Profile
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link <%= activeMenu === 'profile' ? 'active' : '' %>" href="/auth/change-password">
-                <i class="bi bi-key me-2"></i>Ganti Password
+            <a class="nav-link <%= activeMenu === 'change-password' ? 'active' : '' %>" href="/auth/change-password">
+                <i class="bi bi-key"></i>Ganti Password
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-danger" href="/auth/logout">
-                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                <i class="bi bi-box-arrow-right"></i>Logout
             </a>
         </li>
     </ul>
