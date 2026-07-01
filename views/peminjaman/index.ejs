@@ -38,8 +38,8 @@
                                 <small class="text-muted"><%= item.kode_barang %></small>
                             </td>
                             <td><%= item.jumlah %></td>
-                            <td><%= item.tanggal_pinjam || '-' %></td>
-                            <td><%= item.tanggal_jatuh_tempo %></td>
+                            <td><%= formatDate(item.tanggal_pinjam) %></td>
+                            <td><%= formatDate(item.tanggal_jatuh_tempo) %></td>
                             <td>
                                 <% if (item.status === 'Menunggu') { %>
                                     <span class="badge bg-warning text-dark">Menunggu</span>

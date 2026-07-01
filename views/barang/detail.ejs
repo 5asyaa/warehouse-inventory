@@ -73,11 +73,11 @@
                         </tr>
                         <tr>
                             <th>Tanggal Dibuat</th>
-                            <td><%= new Date(barang.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                            <td><%= formatDate(barang.created_at) %></td>
                         </tr>
                         <tr>
                             <th>Tanggal Diupdate</th>
-                            <td><%= new Date(barang.updated_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                            <td><%= formatDate(barang.updated_at) %></td>
                         </tr>
                     </tbody>
                 </table>

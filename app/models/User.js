@@ -16,7 +16,7 @@ class User {
     static async findById(id) {
         try {
             const [rows] = await pool.execute(
-                'SELECT id, username, nama_lengkap, email, role, status FROM users WHERE id = ?',
+                'SELECT id, username, password, nama_lengkap, email, role, status, created_at FROM users WHERE id = ?',
                 [id]
             );
             return rows[0];
@@ -26,12 +26,12 @@ class User {
     }
 
     static async getAll() {
-        const [rows] = await pool.query('SELECT id, username, nama_lengkap, email, role, status FROM users ORDER BY id DESC');
+        const [rows] = await pool.query('SELECT id, username, nama_lengkap, email, role, status, created_at FROM users ORDER BY id DESC');
         return rows;
     }
 
     static async getById(id) {
-        const [rows] = await pool.query('SELECT id, username, nama_lengkap, email, role, status FROM users WHERE id = ?', [id]);
+        const [rows] = await pool.query('SELECT id, username, nama_lengkap, email, role, status, created_at FROM users WHERE id = ?', [id]);
         return rows[0];
     }
 
@@ -120,6 +120,23 @@ class User {
             ['Admin', 'Aktif']
         );
         return rows[0].count;
+    }
+
+    static async updateProfile(id, data) {
+        const { nama_lengkap, email } = data;
+        const [result] = await pool.query(
+            'UPDATE users SET nama_lengkap = ?, email = ? WHERE id = ?',
+            [nama_lengkap, email, id]
+        );
+        return result.affectedRows;
+    }
+
+    static async updatePassword(id, password) {
+        const [result] = await pool.query(
+            'UPDATE users SET password = ? WHERE id = ?',
+            [password, id]
+        );
+        return result.affectedRows;
     }
 }
 

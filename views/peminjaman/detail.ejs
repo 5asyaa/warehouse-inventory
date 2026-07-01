@@ -32,11 +32,11 @@
                     </tr>
                     <tr>
                         <th>Tanggal Pinjam</th>
-                        <td><%= peminjaman.tanggal_pinjam || '-' %></td>
+                        <td><%= formatDate(peminjaman.tanggal_pinjam) %></td>
                     </tr>
                     <tr>
                         <th>Tanggal Kembali</th>
-                        <td><%= peminjaman.tanggal_jatuh_tempo %></td>
+                        <td><%= formatDate(peminjaman.tanggal_jatuh_tempo) %></td>
                     </tr>
                 </table>
             </div>
@@ -70,11 +70,11 @@
                     <% } %>
                     <tr>
                         <th>Tanggal Pengajuan</th>
-                        <td><%= peminjaman.tanggal_pengajuan %></td>
+                        <td><%= formatDate(peminjaman.tanggal_pengajuan) %></td>
                     </tr>
                     <tr>
                         <th>Dibuat Pada</th>
-                        <td><%= peminjaman.created_at %></td>
+                        <td><%= formatDateTime(peminjaman.created_at) %></td>
                     </tr>
                 </table>
             </div>
