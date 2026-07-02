@@ -14,5 +14,6 @@ router.use('/lokasi', require('./lokasi'));
 router.use('/barang', require('./barang'));
 router.use('/user', require('./user'));
 router.use('/peminjaman', require('./peminjaman'));
+router.use('/warehouse', require('./warehouse'));
 
 module.exports = router;

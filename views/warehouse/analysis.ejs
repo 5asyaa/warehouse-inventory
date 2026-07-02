@@ -1,0 +1,546 @@
+<div class="d-flex justify-content-between align-items-center mb-5 fade-in">
+    <div>
+        <h2 class="mb-1">Analisis Gudang</h2>
+        <p class="text-muted mb-0">Dashboard analitik kondisi gudang real-time</p>
+    </div>
+</div>
+
+<!-- Analisis 1: Ringkasan Kondisi Gudang (KPI) -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon primary">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Total Barang</h5>
+                    <p class="stat-value"><%= analysis.kpi.totalBarang %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Aktif</h5>
+                    <p class="stat-value"><%= analysis.kpi.barangAktif %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon info">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Dipinjam</h5>
+                    <p class="stat-value"><%= analysis.kpi.barangDipinjam %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon success">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Tersedia</h5>
+                    <p class="stat-value"><%= analysis.kpi.barangTersedia %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Barang Terlambat</h5>
+                    <p class="stat-value"><%= analysis.kpi.barangTerlambat %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-2">
+        <div class="card mb-3 fade-in">
+            <div class="card-body stat-card">
+                <div class="stat-icon warning">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-content">
+                    <h5>Pending Approval</h5>
+                    <p class="stat-value"><%= analysis.kpi.pendingApproval %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 2: Status Kesehatan Gudang -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Status Kesehatan Gudang</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-grow-1">
+                        <div class="progress" style="height: 25px; background-color: var(--bg-hover);">
+                            <div class="progress-bar bg-<%= analysis.healthScore.badge %>" 
+                                 role="progressbar" 
+                                 style="width: <%= analysis.healthScore.score %>%; transition: width 0.6s ease;"
+                                 aria-valuenow="<%= analysis.healthScore.score %>" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                <%= analysis.healthScore.score %>%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <span class="badge bg-<%= analysis.healthScore.badge %> fs-5 px-4 py-2">
+                        <%= analysis.healthScore.status %>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 3 & 4: Charts -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Peminjaman per Bulan</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Status Peminjaman</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 5: Kategori Chart -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Jumlah Barang per Kategori</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="kategoriChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 6 & 7: Tables -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Top Barang Paling Sering Dipinjam</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Barang</th>
+                                <th>Total Dipinjam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (analysis.topBarang.length > 0) { %>
+                                <% analysis.topBarang.forEach((item) => { %>
+                                    <tr>
+                                        <td><%= item.nama_barang %></td>
+                                        <td><%= item.total_dipinjam %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Belum ada data</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Barang Tidak Pernah Dipinjam</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Barang</th>
+                                <th>Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (analysis.unusedBarang.length > 0) { %>
+                                <% analysis.unusedBarang.forEach((item) => { %>
+                                    <tr>
+                                        <td><%= item.nama_barang %></td>
+                                        <td><%= item.stok %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Semua barang pernah dipinjam</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 8: Low Stock -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Barang Hampir Habis (Perlu Restock)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Stok</th>
+                                <th>Stok Minimum</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (analysis.lowStock.length > 0) { %>
+                                <% analysis.lowStock.forEach((item) => { %>
+                                    <tr>
+                                        <td><%= item.nama_barang %></td>
+                                        <td><%= item.stok %></td>
+                                        <td><%= item.stok_minimum %></td>
+                                        <td><span class="badge bg-danger">Perlu Restock</span></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Semua barang stok aman</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 9: Recent Activity Timeline -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Riwayat Aktivitas Terbaru</h5>
+            </div>
+            <div class="card-body">
+                <% if (analysis.recentActivity.length > 0) { %>
+                    <div class="timeline">
+                        <% analysis.recentActivity.forEach((activity, index) => { %>
+                            <div class="timeline-item mb-3 <%= index === 0 ? '' : 'border-top pt-3' %>">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                                            <%= activity.user_name.charAt(0).toUpperCase() %>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="text-white">
+                                            <strong><%= activity.user_name %></strong> 
+                                            <span class="text-muted">mengajukan</span> 
+                                            <strong><%= activity.nama_barang %></strong>
+                                        </div>
+                                        <div class="text-muted small">
+                                            <%= formatDate(activity.created_at) %> • <%= activity.time %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-<%= activity.status === 'Menunggu' ? 'warning' : activity.status === 'Disetujui' ? 'success' : activity.status === 'Ditolak' ? 'danger' : 'secondary' %>">
+                                            <%= activity.status %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p class="text-muted text-center">Belum ada aktivitas</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 10: Top User -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">User Teraktif</h5>
+            </div>
+            <div class="card-body">
+                <% if (analysis.topUser) { %>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <div class="user-avatar" style="width: 64px; height: 64px; font-size: 1.5rem;">
+                                <%= analysis.topUser.nama_lengkap.charAt(0).toUpperCase() %>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="mb-1"><%= analysis.topUser.nama_lengkap %></h4>
+                            <p class="text-muted mb-0">Total Peminjaman: <strong><%= analysis.topUser.total_peminjaman %></strong></p>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <p class="text-muted text-center">Belum ada data peminjaman</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 11 & 12: Tables -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Barang Terlama Dipinjam</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Barang</th>
+                                <th>Peminjam</th>
+                                <th>Hari</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (analysis.longestBorrowed.length > 0) { %>
+                                <% analysis.longestBorrowed.forEach((item) => { %>
+                                    <tr>
+                                        <td><%= item.nama_barang %></td>
+                                        <td><%= item.peminjam %></td>
+                                        <td><%= item.hari_dipinjam %> hari</td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">Tidak ada barang dipinjam</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Deteksi Keterlambatan</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Barang</th>
+                                <th>Peminjam</th>
+                                <th>Hari Terlambat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (analysis.overdueItems.length > 0) { %>
+                                <% analysis.overdueItems.forEach((item) => { %>
+                                    <tr>
+                                        <td><%= item.nama_barang %></td>
+                                        <td><%= item.peminjam %></td>
+                                        <td>
+                                            <%= item.hari_terlambat %> hari
+                                            <span class="badge bg-danger ms-2">Terlambat</span>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">Tidak ada keterlambatan</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analisis 13: Insight Otomatis -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card mb-3 fade-in">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Insight Otomatis</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <% analysis.insights.forEach((insight) => { %>
+                        <li class="mb-2">
+                            <i class="bi bi-lightbulb text-warning me-2"></i>
+                            <%= insight %>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Monthly Chart (Analisis 3)
+    const monthlyCtx = document.getElementById('monthlyChart');
+    if (monthlyCtx) {
+        const monthlyLabels = <%- JSON.stringify(analysis.monthly.map(m => m.month)) %>;
+        const monthlyData = <%- JSON.stringify(analysis.monthly.map(m => m.count)) %>;
+
+        new Chart(monthlyCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'Jumlah Peminjaman',
+                    data: monthlyData,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Status Chart (Analisis 4)
+    const statusCtx = document.getElementById('statusChart');
+    if (statusCtx) {
+        const statusLabels = <%- JSON.stringify(analysis.status.map(s => s.status)) %>;
+        const statusData = <%- JSON.stringify(analysis.status.map(s => s.count)) %>;
+        const statusColors = {
+            'Menunggu': 'rgba(245, 158, 11, 0.8)',
+            'Disetujui': 'rgba(34, 197, 94, 0.8)',
+            'Ditolak': 'rgba(239, 68, 68, 0.8)',
+            'Dipinjam': 'rgba(59, 130, 246, 0.8)',
+            'Dikembalikan': 'rgba(148, 163, 184, 0.8)'
+        };
+
+        new Chart(statusCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: statusLabels.map(label => statusColors[label] || 'rgba(0, 0, 0, 0.8)')
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Kategori Chart (Analisis 5)
+    const kategoriCtx = document.getElementById('kategoriChart');
+    if (kategoriCtx) {
+        const kategoriLabels = <%- JSON.stringify(analysis.kategori.map(k => k.nama_kategori)) %>;
+        const kategoriData = <%- JSON.stringify(analysis.kategori.map(k => k.count)) %>;
+
+        new Chart(kategoriCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: kategoriLabels,
+                datasets: [{
+                    label: 'Jumlah Barang',
+                    data: kategoriData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
