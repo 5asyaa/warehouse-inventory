@@ -190,56 +190,51 @@ const kategoriController = {
         try {
             const { id } = req.params;
             const { nama_kategori, deskripsi } = req.body;
+            const wantsJson = (
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
+
+            // Validation helper for JSON/HTML
+            const sendValidationError = async (message) => {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message
+                    });
+                }
+                const kategori = await Kategori.getById(id);
+                return res.render('kategori/edit', {
+                    title: 'Edit Kategori - Warehouse',
+                    user: req.session,
+                    activeMenu: 'kategori',
+                    layout: 'layouts/admin',
+                    error: message,
+                    kategori: { ...kategori, nama_kategori, deskripsi }
+                });
+            };
 
             // Validation
             if (!nama_kategori || nama_kategori.trim() === '') {
-                const kategori = await Kategori.getById(id);
-                return res.render('kategori/edit', {
-                    title: 'Edit Kategori - Warehouse',
-                    user: req.session,
-                    activeMenu: 'kategori',
-                    layout: 'layouts/admin',
-                    error: 'Nama kategori wajib diisi',
-                    kategori: { ...kategori, nama_kategori, deskripsi }
-                });
+                return sendValidationError('Nama kategori wajib diisi');
             }
 
             if (nama_kategori.length > 100) {
-                const kategori = await Kategori.getById(id);
-                return res.render('kategori/edit', {
-                    title: 'Edit Kategori - Warehouse',
-                    user: req.session,
-                    activeMenu: 'kategori',
-                    layout: 'layouts/admin',
-                    error: 'Nama kategori maksimal 100 karakter',
-                    kategori: { ...kategori, nama_kategori, deskripsi }
-                });
+                return sendValidationError('Nama kategori maksimal 100 karakter');
             }
 
             if (deskripsi && deskripsi.length > 255) {
-                const kategori = await Kategori.getById(id);
-                return res.render('kategori/edit', {
-                    title: 'Edit Kategori - Warehouse',
-                    user: req.session,
-                    activeMenu: 'kategori',
-                    layout: 'layouts/admin',
-                    error: 'Deskripsi maksimal 255 karakter',
-                    kategori: { ...kategori, nama_kategori, deskripsi }
-                });
+                return sendValidationError('Deskripsi maksimal 255 karakter');
             }
 
             // Check duplicate (exclude current id)
             const duplicate = await Kategori.checkDuplicate(nama_kategori, id);
             if (duplicate > 0) {
-                const kategori = await Kategori.getById(id);
-                return res.render('kategori/edit', {
-                    title: 'Edit Kategori - Warehouse',
-                    user: req.session,
-                    activeMenu: 'kategori',
-                    layout: 'layouts/admin',
-                    error: 'Nama kategori sudah ada',
-                    kategori: { ...kategori, nama_kategori, deskripsi }
-                });
+                return sendValidationError('Nama kategori sudah ada');
             }
 
             // Update kategori
@@ -248,9 +243,35 @@ const kategoriController = {
                 deskripsi: deskripsi ? deskripsi.trim() : null
             });
 
+            if (wantsJson) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Kategori berhasil diperbarui',
+                    data: {
+                        id,
+                        nama_kategori: nama_kategori.trim(),
+                        deskripsi: deskripsi ? deskripsi.trim() : null
+                    }
+                });
+            }
+
             res.redirect('/kategori');
         } catch (error) {
             console.error('Error updating kategori:', error);
+            const wantsJson = (
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             const kategori = await Kategori.getById(req.params.id);
             res.render('kategori/edit', {
                 title: 'Edit Kategori - Warehouse',

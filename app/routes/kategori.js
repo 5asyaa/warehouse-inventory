@@ -22,8 +22,12 @@ router.get('/:id/edit', kategoriController.edit);
 
 // Update - Update kategori
 router.post('/:id/update', kategoriController.update);
+router.put('/:id/update', kategoriController.update);
+router.put('/:id', kategoriController.update);
 
 // Delete - Delete kategori
 router.post('/:id/delete', kategoriController.destroy);
+router.delete('/:id/delete', kategoriController.destroy);
+router.delete('/:id', kategoriController.destroy);
 
 module.exports = router;

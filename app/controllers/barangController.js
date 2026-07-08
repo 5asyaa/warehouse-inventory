@@ -398,9 +398,21 @@ const barangController = {
 
     // Update - Update barang
     update: (req, res) => {
+        const wantsJson = (
+            req.xhr || 
+            req.headers['authorization'] ||
+            (req.headers.accept && req.headers.accept.includes('json')) ||
+            (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+            req.path.startsWith('/api/') ||
+            ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+        );
+
         upload(req, res, async (err) => {
             if (err) {
                 console.error('Upload error:', err);
+                if (wantsJson) {
+                    return res.status(400).json({ success: false, message: err.message || 'Gagal upload foto' });
+                }
                 const barang = await Barang.getById(req.params.id);
                 const kategoriList = await Barang.getKategoriList();
                 const lokasiList = await Barang.getLokasiList();
@@ -422,120 +434,66 @@ const barangController = {
                 
                 // Get existing barang to preserve old photo if no new photo uploaded
                 const existingBarang = await Barang.getById(id);
+                if (!existingBarang) {
+                    if (wantsJson) return res.status(404).json({ success: false, message: 'Barang tidak ditemukan' });
+                    return res.redirect('/barang');
+                }
                 const foto = req.file ? '/uploads/barang/' + req.file.filename : existingBarang.foto;
+
+                // Validation helper
+                const sendValidationError = async (message) => {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message });
+                    }
+                    const kategoriList = await Barang.getKategoriList();
+                    const lokasiList = await Barang.getLokasiList();
+                    return res.render('barang/edit', {
+                        title: 'Edit Barang - Warehouse',
+                        user: req.session,
+                        activeMenu: 'barang',
+                        layout: 'layouts/admin',
+                        error: message,
+                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
+                        kategoriList,
+                        lokasiList
+                    });
+                };
 
                 // Validation
                 if (!nama_barang || nama_barang.trim() === '') {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Nama barang wajib diisi',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                    return sendValidationError('Nama barang wajib diisi');
                 }
 
                 if (!kategori_id) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Kategori wajib dipilih',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                    return sendValidationError('Kategori wajib dipilih');
                 }
 
                 if (!lokasi_id) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Lokasi wajib dipilih',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                    return sendValidationError('Lokasi wajib dipilih');
                 }
 
-                if (stok < 0) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Stok tidak boleh negatif',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                if (stok === undefined || stok === null || stok === '' || parseInt(stok) < 0) {
+                    return sendValidationError('Stok tidak boleh negatif');
                 }
 
-                if (stok_minimum < 0) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Stok minimum tidak boleh negatif',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                if (stok_minimum === undefined || stok_minimum === null || stok_minimum === '' || parseInt(stok_minimum) < 0) {
+                    return sendValidationError('Stok minimum tidak boleh negatif');
                 }
 
                 if (!kondisi) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Kondisi wajib dipilih',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                    return sendValidationError('Kondisi wajib dipilih');
                 }
 
                 if (!status) {
-                    const kategoriList = await Barang.getKategoriList();
-                    const lokasiList = await Barang.getLokasiList();
-                    return res.render('barang/edit', {
-                        title: 'Edit Barang - Warehouse',
-                        user: req.session,
-                        activeMenu: 'barang',
-                        layout: 'layouts/admin',
-                        error: 'Status wajib dipilih',
-                        barang: { ...existingBarang, nama_barang, deskripsi, stok, stok_minimum },
-                        kategoriList,
-                        lokasiList
-                    });
+                    return sendValidationError('Status wajib dipilih');
                 }
 
                 // Update barang
                 await Barang.update(id, {
                     nama_barang: nama_barang.trim(),
                     deskripsi: deskripsi ? deskripsi.trim() : null,
-                    kategori_id,
-                    lokasi_id,
+                    kategori_id: parseInt(kategori_id),
+                    lokasi_id: parseInt(lokasi_id),
                     stok: parseInt(stok),
                     stok_minimum: parseInt(stok_minimum),
                     kondisi,
@@ -543,9 +501,31 @@ const barangController = {
                     status
                 });
 
+                if (wantsJson) {
+                    return res.status(200).json({
+                        success: true,
+                        message: 'Barang berhasil diperbarui',
+                        data: {
+                            id,
+                            nama_barang: nama_barang.trim(),
+                            deskripsi: deskripsi ? deskripsi.trim() : null,
+                            kategori_id: parseInt(kategori_id),
+                            lokasi_id: parseInt(lokasi_id),
+                            stok: parseInt(stok),
+                            stok_minimum: parseInt(stok_minimum),
+                            kondisi,
+                            foto,
+                            status
+                        }
+                    });
+                }
+
                 res.redirect('/barang');
             } catch (error) {
                 console.error('Error updating barang:', error);
+                if (wantsJson) {
+                    return res.status(500).json({ success: false, message: 'Terjadi kesalahan pada server' });
+                }
                 const barang = await Barang.getById(req.params.id);
                 const kategoriList = await Barang.getKategoriList();
                 const lokasiList = await Barang.getLokasiList();

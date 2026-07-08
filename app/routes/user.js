@@ -22,14 +22,21 @@ router.get('/:id/edit', userController.edit);
 
 // Update - Update user
 router.post('/:id/update', userController.update);
+router.put('/:id/update', userController.update);
+router.put('/:id', userController.update);
 
 // Deactivate - Soft delete user
 router.post('/:id/deactivate', userController.deactivate);
+router.put('/:id/deactivate', userController.deactivate);
+router.delete('/:id/deactivate', userController.deactivate);
 
 // Activate - Reactivate user
 router.post('/:id/activate', userController.activate);
+router.put('/:id/activate', userController.activate);
 
 // Delete - Hard delete user
 router.post('/:id/delete', userController.destroy);
+router.delete('/:id/delete', userController.destroy);
+router.delete('/:id', userController.destroy);
 
 module.exports = router;

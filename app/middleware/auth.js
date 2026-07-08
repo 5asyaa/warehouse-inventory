@@ -2,6 +2,15 @@ const jwt = require('jsonwebtoken');
 
 // Auth Middleware
 const authMiddleware = (req, res, next) => {
+    const wantsJson = (
+        req.xhr || 
+        req.headers['authorization'] ||
+        (req.headers.accept && req.headers.accept.includes('json')) ||
+        (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+        req.path.startsWith('/api/') ||
+        ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+    );
+
     // 1. Check Bearer token first
     const authHeader = req.headers['authorization'];
     if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -19,10 +28,6 @@ const authMiddleware = (req, res, next) => {
             return next();
         } catch (error) {
             console.error('JWT Verification Error in authMiddleware:', error.message);
-            const wantsJson = (req.xhr || 
-                               (req.headers.accept && req.headers.accept.includes('json')) ||
-                               req.path.startsWith('/api/') ||
-                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
             if (wantsJson) {
                 return res.status(403).json({
                     success: false,
@@ -39,10 +44,6 @@ const authMiddleware = (req, res, next) => {
     }
 
     // 3. Fallback
-    const wantsJson = (req.xhr || 
-                       (req.headers.accept && req.headers.accept.includes('json')) ||
-                       req.path.startsWith('/api/') ||
-                       (req.headers['content-type'] && req.headers['content-type'].includes('json')));
     if (wantsJson) {
         return res.status(401).json({
             success: false,

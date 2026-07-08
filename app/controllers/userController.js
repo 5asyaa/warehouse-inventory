@@ -314,157 +314,88 @@ const userController = {
         try {
             const { id } = req.params;
             const { username, password, nama_lengkap, email, role, status } = req.body;
+            const wantsJson = (
+                req.wantsJson || 
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
 
-            // Validation
-            if (!username || username.trim() === '') {
+            // Validation helper for JSON/HTML
+            const sendValidationError = async (message) => {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message
+                    });
+                }
                 const user = await User.getById(id);
                 return res.render('user/edit', {
                     title: 'Edit User - Warehouse',
                     user: req.session,
                     activeMenu: 'user',
                     layout: 'layouts/admin',
-                    error: 'Username wajib diisi',
+                    error: message,
                     user: { ...user, username, nama_lengkap, email, role, status }
                 });
+            };
+
+            if (!username || username.trim() === '') {
+                return sendValidationError('Username wajib diisi');
             }
 
             if (username.length < 3) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Username minimal 3 karakter',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Username minimal 3 karakter');
             }
 
             if (username.length > 50) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Username maksimal 50 karakter',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Username maksimal 50 karakter');
             }
 
             if (!nama_lengkap || nama_lengkap.trim() === '') {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Nama lengkap wajib diisi',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Nama lengkap wajib diisi');
             }
 
             if (nama_lengkap.length > 100) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Nama lengkap maksimal 100 karakter',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Nama lengkap maksimal 100 karakter');
             }
 
             if (!email || email.trim() === '') {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Email wajib diisi',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Email wajib diisi');
             }
 
             // Email format validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Format email tidak valid',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Format email tidak valid');
             }
 
             // Password validation (optional on edit)
             if (password && password.length < 6) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Password minimal 6 karakter',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Password minimal 6 karakter');
             }
 
             if (!role) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Role wajib dipilih',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Role wajib dipilih');
             }
 
             if (!status) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Status wajib dipilih',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Status wajib dipilih');
             }
 
             // Check duplicate username (exclude current id)
             const duplicateUsername = await User.checkDuplicateUsername(username, id);
             if (duplicateUsername > 0) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Username sudah digunakan',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Username sudah digunakan');
             }
 
             // Check duplicate email (exclude current id)
             const duplicateEmail = await User.checkDuplicateEmail(email, id);
             if (duplicateEmail > 0) {
-                const user = await User.getById(id);
-                return res.render('user/edit', {
-                    title: 'Edit User - Warehouse',
-                    user: req.session,
-                    activeMenu: 'user',
-                    layout: 'layouts/admin',
-                    error: 'Email sudah digunakan',
-                    user: { ...user, username, nama_lengkap, email, role, status }
-                });
+                return sendValidationError('Email sudah digunakan');
             }
 
             // Prepare update data
@@ -484,9 +415,34 @@ const userController = {
             // Update user
             await User.update(id, updateData);
 
+            if (wantsJson) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'User berhasil diperbarui',
+                    data: {
+                        id,
+                        ...updateData
+                    }
+                });
+            }
+
             res.redirect('/user');
         } catch (error) {
             console.error('Error updating user:', error);
+            const wantsJson = (
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             const user = await User.getById(req.params.id);
             res.render('user/edit', {
                 title: 'Edit User - Warehouse',

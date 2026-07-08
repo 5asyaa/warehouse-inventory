@@ -22,8 +22,12 @@ router.get('/:id/edit', lokasiController.edit);
 
 // Update - Update lokasi
 router.post('/:id/update', lokasiController.update);
+router.put('/:id/update', lokasiController.update);
+router.put('/:id', lokasiController.update);
 
 // Delete - Delete lokasi
 router.post('/:id/delete', lokasiController.destroy);
+router.delete('/:id/delete', lokasiController.destroy);
+router.delete('/:id', lokasiController.destroy);
 
 module.exports = router;

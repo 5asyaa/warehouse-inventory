@@ -190,56 +190,51 @@ const lokasiController = {
         try {
             const { id } = req.params;
             const { nama_lokasi, deskripsi } = req.body;
+            const wantsJson = (
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
+
+            // Validation helper for JSON/HTML
+            const sendValidationError = async (message) => {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message
+                    });
+                }
+                const lokasi = await Lokasi.getById(id);
+                return res.render('lokasi/edit', {
+                    title: 'Edit Lokasi - Warehouse',
+                    user: req.session,
+                    activeMenu: 'lokasi',
+                    layout: 'layouts/admin',
+                    error: message,
+                    lokasi: { ...lokasi, nama_lokasi, deskripsi }
+                });
+            };
 
             // Validation
             if (!nama_lokasi || nama_lokasi.trim() === '') {
-                const lokasi = await Lokasi.getById(id);
-                return res.render('lokasi/edit', {
-                    title: 'Edit Lokasi - Warehouse',
-                    user: req.session,
-                    activeMenu: 'lokasi',
-                    layout: 'layouts/admin',
-                    error: 'Nama lokasi wajib diisi',
-                    lokasi: { ...lokasi, nama_lokasi, deskripsi }
-                });
+                return sendValidationError('Nama lokasi wajib diisi');
             }
 
             if (nama_lokasi.length > 100) {
-                const lokasi = await Lokasi.getById(id);
-                return res.render('lokasi/edit', {
-                    title: 'Edit Lokasi - Warehouse',
-                    user: req.session,
-                    activeMenu: 'lokasi',
-                    layout: 'layouts/admin',
-                    error: 'Nama lokasi maksimal 100 karakter',
-                    lokasi: { ...lokasi, nama_lokasi, deskripsi }
-                });
+                return sendValidationError('Nama lokasi maksimal 100 karakter');
             }
 
             if (deskripsi && deskripsi.length > 255) {
-                const lokasi = await Lokasi.getById(id);
-                return res.render('lokasi/edit', {
-                    title: 'Edit Lokasi - Warehouse',
-                    user: req.session,
-                    activeMenu: 'lokasi',
-                    layout: 'layouts/admin',
-                    error: 'Deskripsi maksimal 255 karakter',
-                    lokasi: { ...lokasi, nama_lokasi, deskripsi }
-                });
+                return sendValidationError('Deskripsi maksimal 255 karakter');
             }
 
             // Check duplicate (exclude current id)
             const duplicate = await Lokasi.checkDuplicate(nama_lokasi, id);
             if (duplicate > 0) {
-                const lokasi = await Lokasi.getById(id);
-                return res.render('lokasi/edit', {
-                    title: 'Edit Lokasi - Warehouse',
-                    user: req.session,
-                    activeMenu: 'lokasi',
-                    layout: 'layouts/admin',
-                    error: 'Nama lokasi sudah ada',
-                    lokasi: { ...lokasi, nama_lokasi, deskripsi }
-                });
+                return sendValidationError('Nama lokasi sudah ada');
             }
 
             // Update lokasi
@@ -248,9 +243,35 @@ const lokasiController = {
                 deskripsi: deskripsi ? deskripsi.trim() : null
             });
 
+            if (wantsJson) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Lokasi berhasil diperbarui',
+                    data: {
+                        id,
+                        nama_lokasi: nama_lokasi.trim(),
+                        deskripsi: deskripsi ? deskripsi.trim() : null
+                    }
+                });
+            }
+
             res.redirect('/lokasi');
         } catch (error) {
             console.error('Error updating lokasi:', error);
+            const wantsJson = (
+                req.xhr || 
+                req.headers['authorization'] ||
+                (req.headers.accept && req.headers.accept.includes('json')) ||
+                (req.headers['content-type'] && req.headers['content-type'].includes('json')) ||
+                req.path.startsWith('/api/') ||
+                ['PUT', 'DELETE', 'PATCH'].includes(req.method)
+            );
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             const lokasi = await Lokasi.getById(req.params.id);
             res.render('lokasi/edit', {
                 title: 'Edit Lokasi - Warehouse',

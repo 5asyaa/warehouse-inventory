@@ -15,9 +15,11 @@ router.get('/logout', authController.logout);
 // Profile (requires auth)
 router.get('/profile', authMiddleware, authController.profile);
 router.post('/profile', authMiddleware, authController.updateProfile);
+router.put('/profile', authMiddleware, authController.updateProfile);
 
 // Change Password (requires auth)
 router.get('/change-password', authMiddleware, authController.changePassword);
 router.post('/change-password', authMiddleware, authController.processChangePassword);
+router.put('/change-password', authMiddleware, authController.processChangePassword);
 
 module.exports = router;

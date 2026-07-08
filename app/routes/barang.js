@@ -25,11 +25,16 @@ router.get('/:id/edit', barangController.edit);
 
 // Update - Update barang
 router.post('/:id/update', barangController.update);
+router.put('/:id/update', barangController.update);
+router.put('/:id', barangController.update);
 
 // Activate - Reactivate barang
 router.post('/:id/activate', barangController.activate);
+router.put('/:id/activate', barangController.activate);
 
 // Delete - Soft delete barang
 router.post('/:id/delete', barangController.destroy);
+router.delete('/:id/delete', barangController.destroy);
+router.delete('/:id', barangController.destroy);
 
 module.exports = router;
