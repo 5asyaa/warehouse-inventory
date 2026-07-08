@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const Peminjaman = require('../models/Peminjaman');
 
 const warehouseAnalysisService = {
     // Get all warehouse analysis data
@@ -9,16 +10,12 @@ const warehouseAnalysisService = {
             const [barangAktif] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ?', ['Aktif']);
             const [barangDipinjam] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ?', ['Disetujui']);
             const [barangTersedia] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ? AND stok > 0', ['Aktif']);
-            const [barangTerlambat] = await pool.query(`
-                SELECT COUNT(*) as total
-                FROM peminjaman
-                WHERE (status = 'Dipinjam' AND CURDATE() > tanggal_jatuh_tempo)
-                   OR (tanggal_kembali IS NOT NULL AND tanggal_kembali > tanggal_jatuh_tempo)
-            `);
+            const barangTerlambat = await Peminjaman.getOverdue();
             const [pendingApproval] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ?', ['Menunggu']);
+            console.log('[WarehouseAnalysisService] barangTerlambat from Peminjaman.getOverdue():', barangTerlambat);
 
             // Analisis 2: Status Kesehatan Gudang
-            const score = Math.max(0, Math.min(100, 100 - (barangTerlambat[0].total * 10) - (pendingApproval[0].total * 5)));
+            const score = Math.max(0, Math.min(100, 100 - (barangTerlambat * 10) - (pendingApproval[0].total * 5)));
             let healthStatus = '';
             let healthBadge = '';
             if (score >= 80) {
@@ -145,23 +142,8 @@ const warehouseAnalysisService = {
             `);
 
             // Analisis 12: Deteksi Keterlambatan
-            const [overdueItems] = await pool.query(`
-                SELECT 
-                    b.nama_barang,
-                    u.nama_lengkap as peminjam,
-                    p.tanggal_jatuh_tempo,
-                    p.tanggal_kembali,
-                    CASE
-                        WHEN p.tanggal_kembali IS NOT NULL THEN DATEDIFF(p.tanggal_kembali, p.tanggal_jatuh_tempo)
-                        ELSE DATEDIFF(CURDATE(), p.tanggal_jatuh_tempo)
-                    END as hari_terlambat
-                FROM peminjaman p
-                INNER JOIN barang b ON p.barang_id = b.id
-                INNER JOIN users u ON p.user_id = u.id
-                WHERE (p.status = 'Dipinjam' AND CURDATE() > p.tanggal_jatuh_tempo)
-                   OR (p.tanggal_kembali IS NOT NULL AND p.tanggal_kembali > p.tanggal_jatuh_tempo)
-                ORDER BY hari_terlambat DESC
-            `);
+            const overdueItems = await Peminjaman.getOverdueBorrowings();
+            console.log('[WarehouseAnalysisService] overdueItems from Peminjaman.getOverdueBorrowings():', overdueItems.length);
 
             // Analisis 13: Insight Otomatis
             const insights = [];
@@ -209,7 +191,7 @@ const warehouseAnalysisService = {
                     barangAktif: barangAktif[0].total,
                     barangDipinjam: barangDipinjam[0].total,
                     barangTersedia: barangTersedia[0].total,
-                    barangTerlambat: barangTerlambat[0].total,
+                    barangTerlambat: barangTerlambat,
                     pendingApproval: pendingApproval[0].total
                 },
                 // Analisis 2: Health Score

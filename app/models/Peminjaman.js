@@ -178,11 +178,31 @@ class Peminjaman {
         const [rows] = await pool.query(`
             SELECT COUNT(*) as count
             FROM peminjaman
-            WHERE status = 'Disetujui'
-            AND tanggal_jatuh_tempo < CURDATE()
-            AND tanggal_kembali IS NULL
+            WHERE status = 'Dikembalikan'
+            AND tanggal_kembali > tanggal_jatuh_tempo
         `);
+        console.log('[Peminjaman.getOverdue] Query executed, result:', rows[0]);
         return rows[0].count;
+    }
+
+    static async getOverdueBorrowings() {
+        const [rows] = await pool.query(`
+            SELECT
+                p.id,
+                p.tanggal_jatuh_tempo,
+                p.tanggal_kembali,
+                DATEDIFF(p.tanggal_kembali, p.tanggal_jatuh_tempo) as hari_terlambat,
+                b.nama_barang,
+                u.nama_lengkap as peminjam
+            FROM peminjaman p
+            INNER JOIN barang b ON p.barang_id = b.id
+            INNER JOIN users u ON p.user_id = u.id
+            WHERE p.status = 'Dikembalikan'
+            AND p.tanggal_kembali > p.tanggal_jatuh_tempo
+            ORDER BY hari_terlambat DESC
+        `);
+        console.log('[Peminjaman.getOverdueBorrowings] Query executed, rows:', rows.length);
+        return rows;
     }
 }
 

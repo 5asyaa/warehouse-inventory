@@ -8,20 +8,21 @@ const dashboardService = {
         try {
             const peminjamanStats = await Peminjaman.getStats();
             const overdue = await Peminjaman.getOverdue();
-            
+            console.log('[DashboardService.getAdminStats] overdue from Peminjaman.getOverdue():', overdue);
+
             // Barang statistics
             const [barangTotal] = await pool.query('SELECT COUNT(*) as total FROM barang');
             const [barangAktif] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ?', ['Aktif']);
             const [barangNonaktif] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ?', ['Nonaktif']);
-            
+
             // User statistics
             const [userTotal] = await pool.query('SELECT COUNT(*) as total FROM users');
             const [userAktif] = await pool.query('SELECT COUNT(*) as total FROM users WHERE status = ?', ['Aktif']);
-            
+
             // Kategori and Lokasi
             const [kategoriTotal] = await pool.query('SELECT COUNT(*) as total FROM kategori');
             const [lokasiTotal] = await pool.query('SELECT COUNT(*) as total FROM lokasi');
-            
+
             return {
                 totalBarang: barangTotal[0].total,
                 barangAktif: barangAktif[0].total,
