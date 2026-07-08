@@ -7,9 +7,14 @@ const warehouseAnalysisService = {
             // Analisis 1: Ringkasan Kondisi Gudang (KPI)
             const [totalBarang] = await pool.query('SELECT COUNT(*) as total FROM barang');
             const [barangAktif] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ?', ['Aktif']);
-            const [barangDipinjam] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ?', ['Dipinjam']);
+            const [barangDipinjam] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ?', ['Disetujui']);
             const [barangTersedia] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ? AND stok > 0', ['Aktif']);
-            const [barangTerlambat] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ? AND tanggal_jatuh_tempo < CURDATE()', ['Dipinjam']);
+            const [barangTerlambat] = await pool.query(`
+                SELECT COUNT(*) as total
+                FROM peminjaman
+                WHERE (status = 'Dipinjam' AND CURDATE() > tanggal_jatuh_tempo)
+                   OR (tanggal_kembali IS NOT NULL AND tanggal_kembali > tanggal_jatuh_tempo)
+            `);
             const [pendingApproval] = await pool.query('SELECT COUNT(*) as total FROM peminjaman WHERE status = ?', ['Menunggu']);
 
             // Analisis 2: Status Kesehatan Gudang
@@ -153,7 +158,7 @@ const warehouseAnalysisService = {
                 FROM peminjaman p
                 INNER JOIN barang b ON p.barang_id = b.id
                 INNER JOIN users u ON p.user_id = u.id
-                WHERE (p.status = 'Disetujui' AND CURDATE() > p.tanggal_jatuh_tempo AND p.tanggal_kembali IS NULL)
+                WHERE (p.status = 'Dipinjam' AND CURDATE() > p.tanggal_jatuh_tempo)
                    OR (p.tanggal_kembali IS NOT NULL AND p.tanggal_kembali > p.tanggal_jatuh_tempo)
                 ORDER BY hari_terlambat DESC
             `);

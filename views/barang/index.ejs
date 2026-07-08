@@ -44,8 +44,10 @@
                                 <td><%= item.nama_lokasi || '-' %></td>
                                 <td>
                                     <%= item.stok %>
-                                    <% if (item.stok <= item.stok_minimum) { %>
-                                        <span class="badge bg-warning">Hampir Habis</span>
+                                    <% if (item.stok === 0) { %>
+                                        <span class="badge bg-danger">HABIS</span>
+                                    <% } else if (item.stok > 0 && item.stok <= item.stok_minimum) { %>
+                                        <span class="badge bg-warning">HAMPIR HABIS</span>
                                     <% } %>
                                 </td>
                                 <td><%= item.kondisi %></td>

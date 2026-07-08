@@ -275,7 +275,13 @@
                                         <td><%= item.nama_barang %></td>
                                         <td><%= item.stok %></td>
                                         <td><%= item.stok_minimum %></td>
-                                        <td><span class="badge bg-danger">Perlu Restock</span></td>
+                                        <td>
+                                            <% if (item.stok === 0) { %>
+                                                <span class="badge bg-danger">HABIS</span>
+                                            <% } else if (item.stok > 0 && item.stok <= item.stok_minimum) { %>
+                                                <span class="badge bg-warning text-dark">HAMPIR HABIS</span>
+                                            <% } %>
+                                        </td>
                                     </tr>
                                 <% }) %>
                             <% } else { %>

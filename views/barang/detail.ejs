@@ -48,8 +48,10 @@
                             <th>Stok</th>
                             <td>
                                 <%= barang.stok %>
-                                <% if (barang.stok <= barang.stok_minimum) { %>
-                                    <span class="badge bg-warning text-dark ms-2">Hampir Habis</span>
+                                <% if (barang.stok === 0) { %>
+                                    <span class="badge bg-danger ms-2">HABIS</span>
+                                <% } else if (barang.stok > 0 && barang.stok <= barang.stok_minimum) { %>
+                                    <span class="badge bg-warning text-dark ms-2">HAMPIR HABIS</span>
                                 <% } %>
                             </td>
                         </tr>
