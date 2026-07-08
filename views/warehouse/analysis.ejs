@@ -469,14 +469,14 @@
     <div class="col-md-12">
         <div class="card mb-3 fade-in">
             <div class="card-header">
-                <h5 class="card-title mb-0">Insight Otomatis</h5>
+                <h5 class="card-title mb-0 text-white">Insight Otomatis</h5>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
                     <% analysis.insights.forEach((insight) => { %>
                         <li class="mb-2">
                             <i class="bi bi-lightbulb text-warning me-2"></i>
-                            <%= insight %>
+                            <span style="color: #E2E8F0;"><%= insight %></span>
                         </li>
                     <% }) %>
                 </ul>

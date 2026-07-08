@@ -8,7 +8,7 @@ const adminMiddleware = (req, res, next) => {
     }
 
     console.log('Admin middleware gagal!');
-    res.redirect('/login');
+    res.redirect('/auth/login');
 };
 
 module.exports = adminMiddleware;

@@ -35,9 +35,15 @@
                         <td><%= formatDate(peminjaman.tanggal_pinjam) %></td>
                     </tr>
                     <tr>
-                        <th>Tanggal Kembali</th>
+                        <th>Tanggal Jatuh Tempo</th>
                         <td><%= formatDate(peminjaman.tanggal_jatuh_tempo) %></td>
                     </tr>
+                    <% if (peminjaman.tanggal_kembali) { %>
+                    <tr>
+                        <th>Tanggal Pengembalian Aktual</th>
+                        <td><%= formatDate(peminjaman.tanggal_kembali) %></td>
+                    </tr>
+                    <% } %>
                 </table>
             </div>
             <div class="col-md-6">
@@ -62,6 +68,22 @@
                             <% } %>
                         </td>
                     </tr>
+                    <% if (peminjaman.status === 'Dikembalikan' && peminjaman.tanggal_kembali && peminjaman.tanggal_jatuh_tempo) { %>
+                    <tr>
+                        <th>Status Pengembalian</th>
+                        <td>
+                            <% const kembaliDate = new Date(peminjaman.tanggal_kembali); %>
+                            <% const jatuhTempoDate = new Date(peminjaman.tanggal_jatuh_tempo); %>
+                            <% const diffTime = kembaliDate - jatuhTempoDate; %>
+                            <% const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); %>
+                            <% if (diffDays > 0) { %>
+                                <span class="text-warning">⚠ Terlambat <%= diffDays %> Hari</span>
+                            <% } else { %>
+                                <span class="text-success">✓ Tepat Waktu</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
                     <% if (peminjaman.alasan_penolakan) { %>
                     <tr>
                         <th>Alasan Penolakan</th>

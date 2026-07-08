@@ -57,10 +57,11 @@ const dashboardService = {
     async getUserStats(userId) {
         try {
             const userPeminjaman = await Peminjaman.getByUserId(userId);
-            const active = userPeminjaman.filter(p => p.status === 'Disetujui' || p.status === 'Dipinjam').length;
+            // Active borrowing: status = Disetujui AND tanggal_kembali IS NULL
+            const active = userPeminjaman.filter(p => p.status === 'Disetujui' && p.tanggal_kembali === null).length;
             const history = userPeminjaman.length;
             const [barangResult] = await pool.query('SELECT COUNT(*) as total FROM barang WHERE status = ? AND stok > 0', ['Aktif']);
-            
+
             return {
                 peminjamanAktif: active,
                 riwayatPeminjaman: history,

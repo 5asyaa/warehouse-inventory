@@ -57,6 +57,17 @@
                                     <span class="badge status-dipinjam">Dipinjam</span>
                                 <% } else if (item.status === 'Dikembalikan') { %>
                                     <span class="badge status-dikembalikan">Dikembalikan</span>
+                                    <% if (item.tanggal_kembali && item.tanggal_jatuh_tempo) { %>
+                                        <% const kembaliDate = new Date(item.tanggal_kembali); %>
+                                        <% const jatuhTempoDate = new Date(item.tanggal_jatuh_tempo); %>
+                                        <% const diffTime = kembaliDate - jatuhTempoDate; %>
+                                        <% const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); %>
+                                        <% if (diffDays > 0) { %>
+                                            <br><small class="text-warning">⚠ Terlambat <%= diffDays %> Hari</small>
+                                        <% } else { %>
+                                            <br><small class="text-success">✓ Tepat Waktu</small>
+                                        <% } %>
+                                    <% } %>
                                 <% } %>
                             </td>
                             <td>
@@ -72,8 +83,8 @@
                                             <i class="bi bi-x"></i>
                                         </button>
                                     <% } %>
-                                    <% if (item.status === 'Disetujui' || item.status === 'Dipinjam') { %>
-                                        <button onclick="returnPeminjaman(<%= item.id %>)" class="btn btn-action btn-edit" title="Kembalikan">
+                                    <% if (item.status === 'Disetujui') { %>
+                                        <button onclick="returnPeminjaman(<%= item.id %>)" class="btn btn-action btn-approve" title="Konfirmasi Pengembalian">
                                             <i class="bi bi-arrow-return-left"></i>
                                         </button>
                                     <% } %>

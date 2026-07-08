@@ -126,11 +126,15 @@ const warehouseAnalysisService = {
                     b.nama_barang,
                     u.nama_lengkap as peminjam,
                     p.tanggal_pinjam,
-                    DATEDIFF(CURDATE(), p.tanggal_pinjam) as hari_dipinjam
+                    p.tanggal_kembali,
+                    CASE
+                        WHEN p.tanggal_kembali IS NOT NULL THEN DATEDIFF(p.tanggal_kembali, p.tanggal_pinjam)
+                        ELSE DATEDIFF(CURDATE(), p.tanggal_pinjam)
+                    END as hari_dipinjam
                 FROM peminjaman p
                 INNER JOIN barang b ON p.barang_id = b.id
                 INNER JOIN users u ON p.user_id = u.id
-                WHERE p.status = 'Dipinjam'
+                WHERE p.status IN ('Disetujui', 'Dikembalikan')
                 ORDER BY hari_dipinjam DESC
                 LIMIT 5
             `);
@@ -140,12 +144,17 @@ const warehouseAnalysisService = {
                 SELECT 
                     b.nama_barang,
                     u.nama_lengkap as peminjam,
-                    DATEDIFF(CURDATE(), p.tanggal_jatuh_tempo) as hari_terlambat
+                    p.tanggal_jatuh_tempo,
+                    p.tanggal_kembali,
+                    CASE
+                        WHEN p.tanggal_kembali IS NOT NULL THEN DATEDIFF(p.tanggal_kembali, p.tanggal_jatuh_tempo)
+                        ELSE DATEDIFF(CURDATE(), p.tanggal_jatuh_tempo)
+                    END as hari_terlambat
                 FROM peminjaman p
                 INNER JOIN barang b ON p.barang_id = b.id
                 INNER JOIN users u ON p.user_id = u.id
-                WHERE p.status = 'Dipinjam'
-                AND CURDATE() > p.tanggal_jatuh_tempo
+                WHERE (p.status = 'Disetujui' AND CURDATE() > p.tanggal_jatuh_tempo AND p.tanggal_kembali IS NULL)
+                   OR (p.tanggal_kembali IS NOT NULL AND p.tanggal_kembali > p.tanggal_jatuh_tempo)
                 ORDER BY hari_terlambat DESC
             `);
 

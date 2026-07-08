@@ -131,8 +131,8 @@ class Peminjaman {
                 throw new Error('Peminjaman not found');
             }
 
-            // Check current status
-            if (peminjaman[0].status !== 'Disetujui' && peminjaman[0].status !== 'Dipinjam') {
+            // Check current status - only Disetujui can be returned
+            if (peminjaman[0].status !== 'Disetujui') {
                 throw new Error('Peminjaman cannot be returned');
             }
 
@@ -178,8 +178,9 @@ class Peminjaman {
         const [rows] = await pool.query(`
             SELECT COUNT(*) as count
             FROM peminjaman
-            WHERE status IN ('Disetujui', 'Dipinjam')
+            WHERE status = 'Disetujui'
             AND tanggal_jatuh_tempo < CURDATE()
+            AND tanggal_kembali IS NULL
         `);
         return rows[0].count;
     }
