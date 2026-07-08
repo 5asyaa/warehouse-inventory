@@ -39,9 +39,19 @@ const kategoriController = {
     store: async (req, res) => {
         try {
             const { nama_kategori, deskripsi } = req.body;
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
 
             // Validation
             if (!nama_kategori || nama_kategori.trim() === '') {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama kategori wajib diisi'
+                    });
+                }
                 return res.render('kategori/create', {
                     title: 'Tambah Kategori - Warehouse',
                     user: req.session,
@@ -54,6 +64,12 @@ const kategoriController = {
             }
 
             if (nama_kategori.length > 100) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama kategori maksimal 100 karakter'
+                    });
+                }
                 return res.render('kategori/create', {
                     title: 'Tambah Kategori - Warehouse',
                     user: req.session,
@@ -66,6 +82,12 @@ const kategoriController = {
             }
 
             if (deskripsi && deskripsi.length > 255) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Deskripsi maksimal 255 karakter'
+                    });
+                }
                 return res.render('kategori/create', {
                     title: 'Tambah Kategori - Warehouse',
                     user: req.session,
@@ -80,6 +102,12 @@ const kategoriController = {
             // Check duplicate
             const duplicate = await Kategori.checkDuplicate(nama_kategori);
             if (duplicate > 0) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama kategori sudah ada'
+                    });
+                }
                 return res.render('kategori/create', {
                     title: 'Tambah Kategori - Warehouse',
                     user: req.session,
@@ -92,14 +120,36 @@ const kategoriController = {
             }
 
             // Create kategori
-            await Kategori.create({
+            const insertId = await Kategori.create({
                 nama_kategori: nama_kategori.trim(),
                 deskripsi: deskripsi ? deskripsi.trim() : null
             });
 
+            if (wantsJson) {
+                return res.status(201).json({
+                    success: true,
+                    message: 'Kategori berhasil dibuat',
+                    data: {
+                        id: insertId,
+                        nama_kategori: nama_kategori.trim(),
+                        deskripsi: deskripsi ? deskripsi.trim() : null
+                    }
+                });
+            }
+
             res.redirect('/kategori');
         } catch (error) {
             console.error('Error creating kategori:', error);
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             res.render('kategori/create', {
                 title: 'Tambah Kategori - Warehouse',
                 user: req.session,

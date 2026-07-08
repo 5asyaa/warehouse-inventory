@@ -39,9 +39,19 @@ const lokasiController = {
     store: async (req, res) => {
         try {
             const { nama_lokasi, deskripsi } = req.body;
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
 
             // Validation
             if (!nama_lokasi || nama_lokasi.trim() === '') {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama lokasi wajib diisi'
+                    });
+                }
                 return res.render('lokasi/create', {
                     title: 'Tambah Lokasi - Warehouse',
                     user: req.session,
@@ -54,6 +64,12 @@ const lokasiController = {
             }
 
             if (nama_lokasi.length > 100) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama lokasi maksimal 100 karakter'
+                    });
+                }
                 return res.render('lokasi/create', {
                     title: 'Tambah Lokasi - Warehouse',
                     user: req.session,
@@ -66,6 +82,12 @@ const lokasiController = {
             }
 
             if (deskripsi && deskripsi.length > 255) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Deskripsi maksimal 255 karakter'
+                    });
+                }
                 return res.render('lokasi/create', {
                     title: 'Tambah Lokasi - Warehouse',
                     user: req.session,
@@ -80,6 +102,12 @@ const lokasiController = {
             // Check duplicate
             const duplicate = await Lokasi.checkDuplicate(nama_lokasi);
             if (duplicate > 0) {
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nama lokasi sudah ada'
+                    });
+                }
                 return res.render('lokasi/create', {
                     title: 'Tambah Lokasi - Warehouse',
                     user: req.session,
@@ -92,14 +120,36 @@ const lokasiController = {
             }
 
             // Create lokasi
-            await Lokasi.create({
+            const insertId = await Lokasi.create({
                 nama_lokasi: nama_lokasi.trim(),
                 deskripsi: deskripsi ? deskripsi.trim() : null
             });
 
+            if (wantsJson) {
+                return res.status(201).json({
+                    success: true,
+                    message: 'Lokasi berhasil dibuat',
+                    data: {
+                        id: insertId,
+                        nama_lokasi: nama_lokasi.trim(),
+                        deskripsi: deskripsi ? deskripsi.trim() : null
+                    }
+                });
+            }
+
             res.redirect('/lokasi');
         } catch (error) {
             console.error('Error creating lokasi:', error);
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             res.render('lokasi/create', {
                 title: 'Tambah Lokasi - Warehouse',
                 user: req.session,

@@ -10,6 +10,9 @@ const dateHelper = require('./app/helpers/dateHelper');
 
 const app = express();
 
+// Trust proxy for secure cookies behind reverse proxy (like Railway)
+app.set('trust proxy', 1);
+
 // Expose date helpers to all views (must be before view engine setup)
 app.locals.formatDate = dateHelper.formatDate;
 app.locals.formatDateTime = dateHelper.formatDateTime;

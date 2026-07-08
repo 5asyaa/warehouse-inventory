@@ -16,4 +16,7 @@ router.use('/user', require('./user'));
 router.use('/peminjaman', require('./peminjaman'));
 router.use('/warehouse', require('./warehouse'));
 
+// Import API routes (using JWT authentication)
+router.use('/api/auth', require('./apiAuth'));
+
 module.exports = router;

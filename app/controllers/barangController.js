@@ -103,9 +103,20 @@ const barangController = {
 
     // Store - Save new barang
     store: (req, res) => {
+        const wantsJson = (req.xhr || 
+                           (req.headers.accept && req.headers.accept.includes('json')) ||
+                           req.headers['authorization'] ||
+                           (req.headers['content-type'] && req.headers['content-type'].includes('json')));
+
         upload(req, res, async (err) => {
             if (err) {
                 console.error('Upload error:', err);
+                if (wantsJson) {
+                    return res.status(400).json({
+                        success: false,
+                        message: err.message || 'Gagal upload foto'
+                    });
+                }
                 const kategoriList = await Barang.getKategoriList();
                 const lokasiList = await Barang.getLokasiList();
                 const kodeBarang = await Barang.generateKodeBarang();
@@ -131,6 +142,9 @@ const barangController = {
 
                 // Validation
                 if (!nama_barang || nama_barang.trim() === '') {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Nama barang wajib diisi' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -151,6 +165,9 @@ const barangController = {
                 }
 
                 if (!kategori_id) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Kategori wajib dipilih' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -171,6 +188,9 @@ const barangController = {
                 }
 
                 if (!lokasi_id) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Lokasi wajib dipilih' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -190,7 +210,10 @@ const barangController = {
                     });
                 }
 
-                if (stok < 0) {
+                if (stok === undefined || stok === null || stok === '' || parseInt(stok) < 0) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Stok tidak boleh negatif' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -210,7 +233,10 @@ const barangController = {
                     });
                 }
 
-                if (stok_minimum < 0) {
+                if (stok_minimum === undefined || stok_minimum === null || stok_minimum === '' || parseInt(stok_minimum) < 0) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Stok minimum tidak boleh negatif' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -231,6 +257,9 @@ const barangController = {
                 }
 
                 if (!kondisi) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Kondisi wajib dipilih' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -251,6 +280,9 @@ const barangController = {
                 }
 
                 if (!status) {
+                    if (wantsJson) {
+                        return res.status(400).json({ success: false, message: 'Status wajib dipilih' });
+                    }
                     const kategoriList = await Barang.getKategoriList();
                     const lokasiList = await Barang.getLokasiList();
                     const kodeBarang = await Barang.generateKodeBarang();
@@ -274,12 +306,12 @@ const barangController = {
                 const kodeBarang = await Barang.generateKodeBarang();
 
                 // Create barang
-                await Barang.create({
+                const insertId = await Barang.create({
                     kode_barang: kodeBarang,
                     nama_barang: nama_barang.trim(),
                     deskripsi: deskripsi ? deskripsi.trim() : null,
-                    kategori_id,
-                    lokasi_id,
+                    kategori_id: parseInt(kategori_id),
+                    lokasi_id: parseInt(lokasi_id),
                     stok: parseInt(stok),
                     stok_minimum: parseInt(stok_minimum),
                     kondisi,
@@ -287,9 +319,35 @@ const barangController = {
                     status
                 });
 
+                if (wantsJson) {
+                    return res.status(201).json({
+                        success: true,
+                        message: 'Barang berhasil disimpan',
+                        data: {
+                            id: insertId,
+                            kode_barang: kodeBarang,
+                            nama_barang: nama_barang.trim(),
+                            deskripsi: deskripsi ? deskripsi.trim() : null,
+                            kategori_id: parseInt(kategori_id),
+                            lokasi_id: parseInt(lokasi_id),
+                            stok: parseInt(stok),
+                            stok_minimum: parseInt(stok_minimum),
+                            kondisi,
+                            foto,
+                            status
+                        }
+                    });
+                }
+
                 res.redirect('/barang');
             } catch (error) {
                 console.error('Error creating barang:', error);
+                if (wantsJson) {
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Terjadi kesalahan pada server'
+                    });
+                }
                 const kategoriList = await Barang.getKategoriList();
                 const lokasiList = await Barang.getLokasiList();
                 const kodeBarang = await Barang.generateKodeBarang();

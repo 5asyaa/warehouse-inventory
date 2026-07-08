@@ -123,7 +123,8 @@ const authController = {
     updateProfile: async (req, res) => {
         try {
             const userId = req.session.userId;
-            const { nama_lengkap, email } = req.body;
+            const nama_lengkap = req.body.nama_lengkap !== undefined ? req.body.nama_lengkap : req.body.namaLengkap;
+            const { email } = req.body;
 
             // Validation
             if (!nama_lengkap || nama_lengkap.trim().length === 0) {
@@ -187,7 +188,9 @@ const authController = {
     processChangePassword: async (req, res) => {
         try {
             const userId = req.session.userId;
-            const { current_password, new_password, confirm_password } = req.body;
+            const current_password = req.body.current_password !== undefined ? req.body.current_password : req.body.passwordLama;
+            const new_password = req.body.new_password !== undefined ? req.body.new_password : req.body.passwordBaru;
+            const confirm_password = req.body.confirm_password !== undefined ? req.body.confirm_password : req.body.konfirmasiPassword;
 
             // Validation
             if (!current_password || !new_password || !confirm_password) {

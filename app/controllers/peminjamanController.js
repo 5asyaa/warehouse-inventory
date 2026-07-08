@@ -68,9 +68,14 @@ const peminjamanController = {
         try {
             const { barang_id, jumlah, tanggal_pinjam, tanggal_kembali, alasan } = req.body;
             const userId = req.session.userId;
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
 
             // Validation
             if (!barang_id) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Barang wajib dipilih' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -88,6 +93,7 @@ const peminjamanController = {
             }
 
             if (!jumlah || parseInt(jumlah) < 1) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Jumlah minimal 1' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -105,6 +111,7 @@ const peminjamanController = {
             }
 
             if (!tanggal_pinjam) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Tanggal pinjam wajib diisi' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -122,6 +129,7 @@ const peminjamanController = {
             }
 
             if (!tanggal_kembali) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Tanggal kembali wajib diisi' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -142,6 +150,7 @@ const peminjamanController = {
             const pinjamDate = new Date(tanggal_pinjam);
             const kembaliDate = new Date(tanggal_kembali);
             if (kembaliDate < pinjamDate) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Tanggal kembali tidak boleh lebih kecil dari tanggal pinjam' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -159,6 +168,7 @@ const peminjamanController = {
             }
 
             if (!alasan || alasan.trim().length < 10) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Keperluan wajib diisi minimal 10 karakter' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -178,6 +188,7 @@ const peminjamanController = {
             // Get barang details
             const barang = await Barang.getById(barang_id);
             if (!barang) {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Barang tidak ditemukan' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -196,6 +207,7 @@ const peminjamanController = {
 
             // Check if barang is active
             if (barang.status !== 'Aktif') {
+                if (wantsJson) return res.status(400).json({ success: false, message: 'Barang tidak tersedia' });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -214,6 +226,7 @@ const peminjamanController = {
 
             // Check if jumlah exceeds stok
             if (parseInt(jumlah) > barang.stok) {
+                if (wantsJson) return res.status(400).json({ success: false, message: `Jumlah melebihi stok tersedia (${barang.stok})` });
                 const barangList = await Peminjaman.getAvailableBarang();
                 return res.render('peminjaman/create', {
                     title: 'Ajukan Peminjaman - Warehouse',
@@ -237,7 +250,7 @@ const peminjamanController = {
             const today = new Date().toISOString().split('T')[0];
 
             // Create peminjaman
-            await Peminjaman.create({
+            const insertId = await Peminjaman.create({
                 kode_peminjaman: kodePeminjaman,
                 user_id: userId,
                 barang_id: parseInt(barang_id),
@@ -248,9 +261,38 @@ const peminjamanController = {
                 alasan: alasan.trim()
             });
 
+            if (wantsJson) {
+                return res.status(201).json({
+                    success: true,
+                    message: 'Pengajuan peminjaman berhasil dibuat',
+                    data: {
+                        id: insertId,
+                        kode_peminjaman: kodePeminjaman,
+                        user_id: userId,
+                        barang_id: parseInt(barang_id),
+                        jumlah: parseInt(jumlah),
+                        tanggal_pengajuan: today,
+                        tanggal_pinjam: tanggal_pinjam,
+                        tanggal_jatuh_tempo: tanggal_kembali,
+                        alasan: alasan.trim(),
+                        status: 'Menunggu'
+                    }
+                });
+            }
+
             res.redirect('/peminjaman');
         } catch (error) {
             console.error('Error creating peminjaman:', error);
+            const wantsJson = (req.xhr || 
+                               (req.headers.accept && req.headers.accept.includes('json')) ||
+                               req.headers['authorization'] ||
+                               (req.headers['content-type'] && req.headers['content-type'].includes('json')));
+            if (wantsJson) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Terjadi kesalahan pada server'
+                });
+            }
             const barangList = await Peminjaman.getAvailableBarang();
             res.render('peminjaman/create', {
                 title: 'Ajukan Peminjaman - Warehouse',
