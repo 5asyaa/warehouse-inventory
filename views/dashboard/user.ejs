@@ -54,8 +54,9 @@
                 <h5 class="card-title mb-0">Peminjaman Terbaru</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Kode</th>
@@ -75,26 +76,33 @@
                                         <td><%= formatDate(item.tanggal_pinjam) %></td>
                                         <td>
                                             <% if (item.status === 'Menunggu') { %>
-                                                <span class="badge bg-warning">Menunggu</span>
+                                                <span class="badge status-menunggu">Menunggu</span>
                                             <% } else if (item.status === 'Disetujui') { %>
-                                                <span class="badge bg-success">Disetujui</span>
+                                                <span class="badge status-disetujui">Disetujui</span>
                                             <% } else if (item.status === 'Ditolak') { %>
-                                                <span class="badge bg-danger">Ditolak</span>
+                                                <span class="badge status-ditolak">Ditolak</span>
                                             <% } else if (item.status === 'Dipinjam') { %>
-                                                <span class="badge bg-primary">Dipinjam</span>
+                                                <span class="badge status-dipinjam">Dipinjam</span>
                                             <% } else if (item.status === 'Dikembalikan') { %>
-                                                <span class="badge bg-secondary">Dikembalikan</span>
+                                                <span class="badge status-dikembalikan">Dikembalikan</span>
                                             <% } %>
                                         </td>
                                     </tr>
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Belum ada peminjaman</td>
+                                    <td colspan="5" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-box-seam"></i>
+                                            <h5>Belum ada peminjaman</h5>
+                                            <p>Silakan ajukan peminjaman barang baru.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

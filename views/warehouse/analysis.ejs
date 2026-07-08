@@ -171,8 +171,9 @@
                 <h5 class="card-title mb-0">Top Barang Paling Sering Dipinjam</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Barang</th>
@@ -189,11 +190,18 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="2" class="text-center text-muted">Belum ada data</td>
+                                    <td colspan="2" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-box-seam"></i>
+                                            <h5>Belum ada data</h5>
+                                            <p>Silakan tambahkan data baru.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,8 +212,9 @@
                 <h5 class="card-title mb-0">Barang Tidak Pernah Dipinjam</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Barang</th>
@@ -222,11 +231,18 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="2" class="text-center text-muted">Semua barang pernah dipinjam</td>
+                                    <td colspan="2" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-box-seam"></i>
+                                            <h5>Semua barang pernah dipinjam</h5>
+                                            <p>Tidak ada barang yang belum pernah dipinjam.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -241,8 +257,9 @@
                 <h5 class="card-title mb-0">Barang Hampir Habis (Perlu Restock)</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Nama Barang</th>
@@ -263,11 +280,18 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">Semua barang stok aman</td>
+                                    <td colspan="4" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-check-circle"></i>
+                                            <h5>Stok Aman</h5>
+                                            <p>Semua barang memiliki stok yang cukup.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -303,7 +327,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="badge bg-<%= activity.status === 'Menunggu' ? 'warning' : activity.status === 'Disetujui' ? 'success' : activity.status === 'Ditolak' ? 'danger' : 'secondary' %>">
+                                        <span class="badge <%= activity.status === 'Menunggu' ? 'status-menunggu' : activity.status === 'Disetujui' ? 'status-disetujui' : activity.status === 'Ditolak' ? 'status-ditolak' : 'status-dikembalikan' %>">
                                             <%= activity.status %>
                                         </span>
                                     </div>
@@ -355,8 +379,9 @@
                 <h5 class="card-title mb-0">Barang Terlama Dipinjam</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Barang</th>
@@ -375,11 +400,18 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Tidak ada barang dipinjam</td>
+                                    <td colspan="3" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-box-seam"></i>
+                                            <h5>Tidak ada barang dipinjam</h5>
+                                            <p>Belum ada barang yang sedang dipinjam.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -390,8 +422,9 @@
                 <h5 class="card-title mb-0">Deteksi Keterlambatan</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
+                <div class="warehouse-table-container">
+                    <div class="table-responsive">
+                        <table class="table warehouse-table">
                         <thead>
                             <tr>
                                 <th>Barang</th>
@@ -413,11 +446,18 @@
                                 <% }) %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Tidak ada keterlambatan</td>
+                                    <td colspan="3" class="text-center text-muted">
+                                        <div class="empty-state">
+                                            <i class="bi bi-check-circle"></i>
+                                            <h5>Tidak ada keterlambatan</h5>
+                                            <p>Semua barang dikembalikan tepat waktu.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

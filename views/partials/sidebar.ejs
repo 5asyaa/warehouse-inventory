@@ -57,20 +57,7 @@
             </li>
         <% } %>
         
-        <div class="sidebar-header">
-            <h6>Akun</h6>
-        </div>
-        <li class="nav-item">
-            <a class="nav-link <%= activeMenu === 'profile' ? 'active' : '' %>" href="/auth/profile">
-                <i class="bi bi-person"></i>Profile
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <%= activeMenu === 'change-password' ? 'active' : '' %>" href="/auth/change-password">
-                <i class="bi bi-key"></i>Ganti Password
-            </a>
-        </li>
-        <li class="nav-item">
+        <li class="nav-item mt-4">
             <a class="nav-link text-danger" href="/auth/logout">
                 <i class="bi bi-box-arrow-right"></i>Logout
             </a>

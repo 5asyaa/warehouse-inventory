@@ -4,10 +4,10 @@
     --bg-primary: #0F172A;
     --bg-secondary: #111827;
     --bg-tertiary: #1E293B;
-    --bg-hover: #334155;
+    --bg-hover: #1E293B;
 
     /* Border */
-    --border-color: rgba(255, 255, 255, 0.08);
+    --border-color: #334155;
 
     /* Brand Colors */
     --primary-color: #3B82F6;
@@ -17,13 +17,13 @@
     --danger-color: #EF4444;
 
     /* Text Colors */
-    --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E2E8F0;
+    --text-muted: #94A3B8;
 
     /* UI Properties */
     --border-radius: 16px;
-    --border-radius-sm: 12px;
+    --border-radius-sm: 10px;
     --border-radius-lg: 20px;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
@@ -37,7 +37,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
@@ -215,9 +215,9 @@ body {
 
 /* Cards */
 .card {
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--bg-tertiary);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    background-color: #1E293B;
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     overflow: hidden;
@@ -231,7 +231,7 @@ body {
 
 .card-header {
     background-color: transparent;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #334155;
     padding: 1.25rem 1.5rem;
 }
 
@@ -317,43 +317,195 @@ body {
 }
 
 /* Tables */
-.table {
-    color: var(--text-primary);
-    background-color: transparent;
+/* Warehouse Table Container */
+.warehouse-table-container {
+    background-color: #111827;
+    border-radius: 14px;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
 }
 
-.table thead th {
-    background-color: var(--bg-tertiary);
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    font-weight: 600;
-    font-size: 0.875rem;
+/* Warehouse Table */
+.warehouse-table {
+    color: #F8FAFC;
+    background-color: #111827 !important;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.warehouse-table > :not(caption) > * > * {
+    background-color: #111827 !important;
+    color: #F8FAFC !important;
+}
+
+.warehouse-table thead th {
+    background-color: #1E293B !important;
+    border-bottom: 1px solid #334155 !important;
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 1rem 1.25rem;
+    letter-spacing: 1px;
+    padding: 18px 20px;
 }
 
-.table tbody tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: var(--transition);
+.warehouse-table tbody tr {
+    border-bottom: 1px solid #334155 !important;
+    transition: 0.2s ease;
+    background-color: #111827 !important;
+    min-height: 60px;
 }
 
-.table tbody tr:hover {
-    background-color: var(--bg-hover);
+.warehouse-table tbody tr:hover {
+    background-color: #1F2937 !important;
+    cursor: pointer;
 }
 
-.table tbody td {
-    padding: 1rem 1.25rem;
+.warehouse-table tbody tr:hover > td {
+    background-color: #1F2937 !important;
+}
+
+.warehouse-table tbody td {
+    padding: 18px;
     vertical-align: middle;
+    color: #F8FAFC !important;
+    font-weight: 500;
+    border-color: #334155 !important;
+    background-color: #111827 !important;
 }
 
-.table .text-muted {
-    color: var(--text-muted) !important;
+.warehouse-table .text-muted {
+    color: #94A3B8 !important;
+}
+
+.warehouse-table .text-secondary {
+    color: #CBD5E1 !important;
+}
+
+.warehouse-table a {
+    color: #60A5FA;
+    text-decoration: none;
+}
+
+.warehouse-table a:hover {
+    color: #3B82F6;
+}
+
+/* Action Buttons */
+.btn-action {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+.btn-action i {
+    font-size: 15px;
+}
+
+/* Detail Button */
+.btn-action.btn-detail {
+    background-color: #334155;
+    color: white;
+}
+
+.btn-action.btn-detail:hover {
+    background-color: #475569;
+}
+
+/* Edit Button */
+.btn-action.btn-edit {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.btn-action.btn-edit:hover {
+    background-color: #2563EB;
+}
+
+/* Delete Button */
+.btn-action.btn-delete {
+    background-color: #EF4444;
+    color: white;
+}
+
+.btn-action.btn-delete:hover {
+    background-color: #DC2626;
+}
+
+/* Approve Button */
+.btn-action.btn-approve {
+    background-color: #10B981;
+    color: white;
+}
+
+.btn-action.btn-approve:hover {
+    background-color: #059669;
+}
+
+/* Reject Button */
+.btn-action.btn-reject {
+    background-color: #F59E0B;
+    color: white;
+}
+
+.btn-action.btn-reject:hover {
+    background-color: #D97706;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: #111827;
+    border-radius: 14px;
+    border: 1px solid #334155;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #334155;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.empty-state h5 {
+    color: #F8FAFC;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: #94A3B8;
+    margin-bottom: 0;
+}
+
+/* Responsive Table */
+.table-responsive {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.table-responsive .warehouse-table {
+    border-radius: 14px;
 }
 
 /* Buttons */
 .btn {
-    border-radius: var(--border-radius-sm);
+    border-radius: 10px;
     padding: 0.625rem 1.5rem;
     font-weight: 600;
     font-size: 0.875rem;
@@ -385,6 +537,15 @@ body {
 
 .btn-success:hover {
     background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+    color: white;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
 }
 
 .btn-danger {
@@ -456,40 +617,110 @@ body {
     color: var(--text-primary);
 }
 
+/* Date Input Styling */
+input[type="date"] {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+}
+
+input[type="date"]:focus {
+    background-color: var(--bg-tertiary);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    color: var(--text-primary);
+}
+
+input[type="date"]::placeholder {
+    color: var(--text-muted);
+}
+
+/* Calendar Picker Icon - Chromium Browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2);
+    opacity: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(1) brightness(2.5);
+}
+
+/* Date Input - Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+    filter: invert(1) brightness(2);
+    opacity: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input[type="date"]::-moz-calendar-picker-indicator:hover {
+    filter: invert(1) brightness(2.5);
+}
+
 /* Badges */
 .badge {
-    padding: 0.375rem 0.875rem;
-    border-radius: 20px;
+    padding: 6px 14px;
+    border-radius: 999px;
     font-weight: 600;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-}
-
-.badge.bg-warning {
-    background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
     color: white !important;
 }
 
+/* Status Colors - Flat Modern */
 .badge.bg-success {
-    background: linear-gradient(135deg, var(--success-color), #16a34a) !important;
-    color: white !important;
-}
-
-.badge.bg-danger {
-    background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
-    color: white !important;
-}
-
-.badge.bg-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)) !important;
-    color: white !important;
+    background-color: #22C55E !important;
 }
 
 .badge.bg-secondary {
-    background: linear-gradient(135deg, var(--bg-hover), var(--bg-tertiary)) !important;
-    color: var(--text-secondary) !important;
-    border: 1px solid var(--border-color);
+    background-color: #64748B !important;
+}
+
+.badge.bg-warning {
+    background-color: #F59E0B !important;
+}
+
+.badge.bg-primary {
+    background-color: #3B82F6 !important;
+}
+
+.badge.bg-danger {
+    background-color: #EF4444 !important;
+}
+
+/* Specific status badges */
+.badge.status-aktif {
+    background-color: #22C55E !important;
+}
+
+.badge.status-nonaktif {
+    background-color: #64748B !important;
+}
+
+.badge.status-menunggu {
+    background-color: #F59E0B !important;
+}
+
+.badge.status-disetujui {
+    background-color: #10B981 !important;
+}
+
+.badge.status-dipinjam {
+    background-color: #3B82F6 !important;
+}
+
+.badge.status-dikembalikan {
+    background-color: #6B7280 !important;
+}
+
+.badge.status-ditolak {
+    background-color: #EF4444 !important;
 }
 
 /* Chart Container */
@@ -577,6 +808,30 @@ a:hover {
     color: var(--primary-hover);
 }
 
+/* Footer */
+footer {
+    background-color: #111827 !important;
+    border-top: 1px solid #334155 !important;
+    padding: 18px 0;
+    text-align: center;
+}
+
+footer p {
+    color: #94A3B8 !important;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+footer a {
+    color: #60A5FA;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #3B82F6;
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .sidebar {
@@ -615,8 +870,8 @@ a:hover {
         padding: 1.25rem;
     }
 
-    .table thead th,
-    .table tbody td {
+    .warehouse-table thead th,
+    .warehouse-table tbody td {
         padding: 0.75rem 1rem;
     }
 }
